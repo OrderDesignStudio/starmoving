@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      String   @default("SALES_REP") // ADMIN | SALES_REP
+  cases     Case[]
+  createdAt DateTime @default(now())
+}
+
+model Case {
+  id                 String       @id @default(cuid())
+  userId             String
+  user               User         @relation(fields: [userId], references: [id])
+  // 案件概要
+  caseDate           DateTime     // 案件発生日
+  caseSource         String       // 案件発生経路
+  caseType           String       // OFFICE | FAMILY | REMNANT | DELIVERY
+  smoverId           String?      // SmoverID
+  customerName       String       // 顧客名
+  visitDate          DateTime?    // 訪問日
+  estimateSubmitDate DateTime?    // 見積送付日
+  status             String       @default("PRE_ESTIMATE") // WON | WON_CANCELLED | APPOINTMENT | CONSIDERING | ESTIMATE_SUBMITTED | PRE_ESTIMATE | LOST_TO_COMPETITOR
+  movingDate         DateTime?    // 移転日
+  cargoVolume        Float?       // 荷量（㎥）
+  clientContact      String?      // 先方担当者
+  letterEnclosed     String       @default("NOT_SENT") // SENT | NOT_SENT
+  onSiteEstimate     String?      // ON_SITE | LATER
+  notes              String?      // 備考
+  // 案件ヒアリング
+  moveCount          Int?         // 引越し回数
+  budget             String?      // 予算
+  companyDisclosure  String       @default("NOT_DONE") // NOT_DONE | DONE
+  motivationDone     Boolean      @default(false) // 動機/目的
+  competingEstimates Int?         // 相見積もり先数
+  competingDetails   String?      // 相見積もり先詳細
+  // クロージング
+  testClosingDone    Boolean      @default(false) // テストクロージング
+  phoneClosingDate   DateTime?    // 電話クロージング予定
+  // リレーション
+  expenses           CaseExpense?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+}
+
+model CaseExpense {
+  id                 String  @id @default(cuid())
+  caseId             String  @unique
+  case               Case    @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  estimateAmount     Int?    // 見積もり金額（円）
+  workingHours       Float?  // 稼働時間(h)
+  drivers            Int?    // ドライバー（人）
+  assistants         Int?    // 助手（人）
+  distance           Float?  // 距離(km)
+  highwayToll        Int?    // 高速代（¥）
+  outsourcingCost    Int?    // 外注費用
+  disposalCost       Int?    // 処分費用
+  mediumBoxes        Int?    // 中段ボール
+  largeBoxes         Int?    // 大段ボール
+  otherExpenses      Int?    // その他経費
+  outsourcingDetails String? // 外注詳細
+}
