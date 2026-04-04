@@ -4,6 +4,7 @@ import { compare } from "bcryptjs";
 import { prisma } from "./prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
   providers: [
     Credentials({
       name: "credentials",
@@ -12,23 +13,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "パスワード", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            console.log("[Auth] Missing credentials");
+            return null;
+          }
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email as string },
-        });
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email as string },
+          });
 
-        if (!user) return null;
+          if (!user) {
+            console.log("[Auth] User not found:", credentials.email);
+            return null;
+          }
 
-        const isValid = await compare(credentials.password as string, user.password);
-        if (!isValid) return null;
+          const isValid = await compare(credentials.password as string, user.password);
+          if (!isValid) {
+            console.log("[Auth] Invalid password for:", credentials.email);
+            return null;
+          }
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
+          console.log("[Auth] Login success:", user.email);
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error("[Auth] Error during authorization:", error);
+          return null;
+        }
       },
     }),
   ],
