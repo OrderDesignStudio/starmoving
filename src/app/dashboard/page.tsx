@@ -2,11 +2,19 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { StatsCards } from "@/components/dashboard/stats-cards";
-import { StatusChart } from "@/components/dashboard/status-chart";
-import { MonthlyChart } from "@/components/dashboard/monthly-chart";
-import { RepComparison } from "@/components/dashboard/rep-comparison";
 import { RecentCases } from "@/components/dashboard/recent-cases";
 import { CASE_STATUS } from "@/lib/constants";
+import dynamic from "next/dynamic";
+
+const StatusChart = dynamic(() => import("@/components/dashboard/status-chart").then((m) => ({ default: m.StatusChart })), {
+  loading: () => <div className="h-[380px] bg-white rounded-lg border border-gray-200 animate-pulse" />,
+});
+const MonthlyChart = dynamic(() => import("@/components/dashboard/monthly-chart").then((m) => ({ default: m.MonthlyChart })), {
+  loading: () => <div className="h-[380px] bg-white rounded-lg border border-gray-200 animate-pulse" />,
+});
+const RepComparison = dynamic(() => import("@/components/dashboard/rep-comparison").then((m) => ({ default: m.RepComparison })), {
+  loading: () => <div className="h-[380px] bg-white rounded-lg border border-gray-200 animate-pulse" />,
+});
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -15,39 +23,65 @@ export default async function DashboardPage() {
   const isAdmin = session.user.role === "ADMIN";
   const userFilter = isAdmin ? {} : { userId: session.user.id };
 
-  // Fetch all cases for the current user/admin
-  const allCases = await prisma.case.findMany({
-    where: userFilter,
-    include: { user: true, expenses: true },
-    orderBy: { caseDate: "desc" },
-  });
-
-  // Stats
-  const totalCases = allCases.length;
-  const wonCases = allCases.filter((c) => c.status === CASE_STATUS.WON).length;
-  const decidedCases = allCases.filter(
-    (c) => c.status === CASE_STATUS.WON || c.status === CASE_STATUS.LOST_TO_COMPETITOR || c.status === CASE_STATUS.WON_CANCELLED
-  ).length;
-  const winRate = decidedCases > 0 ? (wonCases / decidedCases) * 100 : 0;
-
   const now = new Date();
   const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const thisMonthCases = allCases.filter((c) => new Date(c.caseDate) >= thisMonthStart).length;
 
-  const totalRevenue = allCases.reduce((sum, c) => sum + (c.expenses?.estimateAmount || 0), 0);
+  // Run all DB queries in parallel
+  const [
+    totalCases,
+    wonCases,
+    decidedCases,
+    thisMonthCases,
+    revenueResult,
+    statusGroups,
+    recentCases,
+  ] = await Promise.all([
+    prisma.case.count({ where: userFilter }),
+    prisma.case.count({ where: { ...userFilter, status: CASE_STATUS.WON } }),
+    prisma.case.count({
+      where: {
+        ...userFilter,
+        status: { in: [CASE_STATUS.WON, CASE_STATUS.LOST_TO_COMPETITOR, CASE_STATUS.WON_CANCELLED] },
+      },
+    }),
+    prisma.case.count({ where: { ...userFilter, caseDate: { gte: thisMonthStart } } }),
+    prisma.caseExpense.aggregate({
+      _sum: { estimateAmount: true },
+      where: { case: userFilter },
+    }),
+    prisma.case.groupBy({
+      by: ["status"],
+      where: userFilter,
+      _count: true,
+    }),
+    prisma.case.findMany({
+      where: userFilter,
+      include: { user: { select: { name: true } } },
+      orderBy: { caseDate: "desc" },
+      take: 10,
+    }),
+  ]);
 
-  // Status distribution
-  const statusCounts = Object.values(CASE_STATUS).map((status) => ({
-    status,
-    count: allCases.filter((c) => c.status === status).length,
-  })).filter((d) => d.count > 0);
+  const totalRevenue = revenueResult._sum.estimateAmount || 0;
+  const winRate = decidedCases > 0 ? (wonCases / decidedCases) * 100 : 0;
 
-  // Monthly data (last 6 months)
+  const statusCounts = statusGroups.map((g) => ({
+    status: g.status,
+    count: g._count,
+  }));
+
+  // Monthly data (last 6 months) - single query with grouping
+  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+  const monthlyCases = await prisma.case.findMany({
+    where: { ...userFilter, caseDate: { gte: sixMonthsAgo } },
+    select: { caseDate: true, status: true },
+  });
+
   const monthlyData = [];
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-    const monthCases = allCases.filter((c) => {
+    const monthCases = monthlyCases.filter((c) => {
       const cd = new Date(c.caseDate);
       return cd >= d && cd <= monthEnd;
     });
@@ -58,30 +92,40 @@ export default async function DashboardPage() {
     });
   }
 
-  // Rep comparison (admin only)
+  // Rep comparison (admin only) - efficient query
   let repData: { name: string; total: number; won: number; rate: number }[] = [];
   if (isAdmin) {
-    const reps = await prisma.user.findMany({
-      where: { role: "SALES_REP" },
-      include: { cases: true },
+    const repGroups = await prisma.case.groupBy({
+      by: ["userId"],
+      _count: true,
     });
-    repData = reps.map((rep) => {
-      const total = rep.cases.length;
-      const won = rep.cases.filter((c) => c.status === CASE_STATUS.WON).length;
-      const decided = rep.cases.filter(
-        (c) => c.status === CASE_STATUS.WON || c.status === CASE_STATUS.LOST_TO_COMPETITOR || c.status === CASE_STATUS.WON_CANCELLED
-      ).length;
+    const wonGroups = await prisma.case.groupBy({
+      by: ["userId"],
+      where: { status: CASE_STATUS.WON },
+      _count: true,
+    });
+    const decidedGroups = await prisma.case.groupBy({
+      by: ["userId"],
+      where: { status: { in: [CASE_STATUS.WON, CASE_STATUS.LOST_TO_COMPETITOR, CASE_STATUS.WON_CANCELLED] } },
+      _count: true,
+    });
+    const users = await prisma.user.findMany({
+      where: { role: "SALES_REP" },
+      select: { id: true, name: true },
+    });
+
+    repData = users.map((u) => {
+      const total = repGroups.find((g) => g.userId === u.id)?._count || 0;
+      const won = wonGroups.find((g) => g.userId === u.id)?._count || 0;
+      const decided = decidedGroups.find((g) => g.userId === u.id)?._count || 0;
       return {
-        name: rep.name,
+        name: u.name,
         total,
         won,
         rate: decided > 0 ? (won / decided) * 100 : 0,
       };
     });
   }
-
-  // Recent cases
-  const recentCases = allCases.slice(0, 10);
 
   return (
     <div className="space-y-6">

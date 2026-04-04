@@ -4,21 +4,25 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/cases/status-badge";
-import { CASE_TYPE_LABELS, CASE_STATUS_LABELS } from "@/lib/constants";
+import { CASE_TYPE_LABELS } from "@/lib/constants";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { FilePlus, Eye } from "lucide-react";
 import { CaseFilters } from "@/components/cases/case-filters";
+import { Pagination } from "@/components/ui/pagination";
+
+const PAGE_SIZE = 20;
 
 export default async function CasesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; caseType?: string; search?: string; userId?: string }>;
+  searchParams: Promise<{ status?: string; caseType?: string; search?: string; userId?: string; page?: string }>;
 }) {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
   const params = await searchParams;
   const isAdmin = session.user.role === "ADMIN";
+  const currentPage = Math.max(1, parseInt(params.page || "1", 10));
 
   // Build where clause
   const where: Record<string, unknown> = {};
@@ -33,15 +37,24 @@ export default async function CasesPage({
     where.customerName = { contains: params.search };
   }
 
-  const cases = await prisma.case.findMany({
-    where,
-    include: { user: true, expenses: true },
-    orderBy: { caseDate: "desc" },
-  });
+  const [cases, totalCount, users] = await Promise.all([
+    prisma.case.findMany({
+      where,
+      include: {
+        user: { select: { name: true } },
+        expenses: { select: { estimateAmount: true } },
+      },
+      orderBy: { caseDate: "desc" },
+      take: PAGE_SIZE,
+      skip: (currentPage - 1) * PAGE_SIZE,
+    }),
+    prisma.case.count({ where }),
+    isAdmin
+      ? prisma.user.findMany({ where: { role: "SALES_REP" }, select: { id: true, name: true }, orderBy: { name: "asc" } })
+      : Promise.resolve([]),
+  ]);
 
-  const users = isAdmin
-    ? await prisma.user.findMany({ where: { role: "SALES_REP" }, select: { id: true, name: true }, orderBy: { name: "asc" } })
-    : [];
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   return (
     <div>
@@ -109,8 +122,11 @@ export default async function CasesPage({
             </tbody>
           </table>
         </div>
-        <div className="bg-gray-50 border-t border-gray-200 px-4 py-3 text-sm text-gray-500">
-          全 {cases.length} 件
+        <div className="bg-gray-50 border-t border-gray-200 px-4 py-3 flex items-center justify-between">
+          <span className="text-sm text-gray-500">
+            全 {totalCount} 件中 {(currentPage - 1) * PAGE_SIZE + 1}-{Math.min(currentPage * PAGE_SIZE, totalCount)} 件表示
+          </span>
+          {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} />}
         </div>
       </div>
     </div>

@@ -34,6 +34,7 @@ export function CaseFilters({
     } else {
       params.delete(key);
     }
+    params.delete("page");
     router.push(`/cases?${params.toString()}`);
   }
 
