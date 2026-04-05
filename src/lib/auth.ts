@@ -42,7 +42,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             role: user.role,
           };
         } catch (error) {
-          console.error("[Auth] Error during authorization:", error);
+          console.error("[Auth] Error during authorization:", JSON.stringify(error, Object.getOwnPropertyNames(error as object)));
+          console.error("[Auth] DATABASE_URL exists:", !!process.env.DATABASE_URL);
+          console.error("[Auth] DATABASE_URL prefix:", process.env.DATABASE_URL?.substring(0, 40));
           return null;
         }
       },
