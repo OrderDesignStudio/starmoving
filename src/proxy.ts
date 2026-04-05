@@ -5,7 +5,7 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip auth routes and static assets
-  if (pathname.startsWith("/api/auth")) return NextResponse.next();
+  if (pathname.startsWith("/api/auth") || pathname.startsWith("/api/health")) return NextResponse.next();
 
   // Check for NextAuth session token cookie
   const sessionToken =
