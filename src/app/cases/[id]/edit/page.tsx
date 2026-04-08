@@ -66,7 +66,7 @@ export default async function EditCasePage({ params }: { params: Promise<{ id: s
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">案件編集: {caseData.customerName}</h1>
+      <h1 className="text-[24px] font-semibold tracking-[-0.96px] text-[#171717] mb-6">案件編集: {caseData.customerName}</h1>
       <CaseForm
         initialData={initialData}
         currentUserId={session.user.id}

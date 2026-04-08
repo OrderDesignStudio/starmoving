@@ -27,16 +27,16 @@ export function Sidebar() {
     <>
       {/* Mobile toggle */}
       <button
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-white shadow-md"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-[6px] bg-white shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_2px]"
         onClick={() => setMobileOpen(!mobileOpen)}
       >
-        {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        {mobileOpen ? <X className="h-5 w-5 text-[#171717]" /> : <Menu className="h-5 w-5 text-[#171717]" />}
       </button>
 
       {/* Overlay */}
       {mobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-30 bg-black/50"
+          className="lg:hidden fixed inset-0 z-30 bg-black/20"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -44,13 +44,13 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-40 h-full w-64 bg-white border-r border-gray-200 transition-transform lg:translate-x-0",
+          "fixed top-0 left-0 z-40 h-full w-64 bg-white shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px] transition-transform lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex items-center gap-2 px-6 py-5 border-b border-gray-200">
-          <Truck className="h-6 w-6 text-blue-600" />
-          <span className="font-bold text-lg">スター引越</span>
+        <div className="flex items-center gap-2.5 px-6 py-5 shadow-[inset_0_-1px_0_rgba(0,0,0,0.08)]">
+          <Truck className="h-5 w-5 text-[#171717]" />
+          <span className="font-semibold text-[15px] tracking-[-0.32px] text-[#171717]">スター引越</span>
         </div>
         <nav className="p-4 space-y-1">
           {navItems.map((item) => {
@@ -61,13 +61,13 @@ export function Sidebar() {
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-[6px] text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    ? "bg-[#fafafa] text-[#171717] shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px]"
+                    : "text-[#666666] hover:bg-[#fafafa] hover:text-[#171717]"
                 )}
               >
-                <item.icon className="h-5 w-5" />
+                <item.icon className="h-4 w-4" />
                 {item.label}
               </Link>
             );
@@ -76,7 +76,7 @@ export function Sidebar() {
           {isAdmin && (
             <>
               <div className="pt-4 pb-1">
-                <p className="px-3 text-xs font-semibold text-gray-400 uppercase">管理</p>
+                <p className="px-3 text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">管理</p>
               </div>
               {adminItems.map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
@@ -86,13 +86,13 @@ export function Sidebar() {
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
+                      "flex items-center gap-3 px-3 py-2.5 rounded-[6px] text-sm font-medium transition-colors",
                       isActive
-                        ? "bg-blue-50 text-blue-700"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        ? "bg-[#fafafa] text-[#171717] shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px]"
+                        : "text-[#666666] hover:bg-[#fafafa] hover:text-[#171717]"
                     )}
                   >
-                    <item.icon className="h-5 w-5" />
+                    <item.icon className="h-4 w-4" />
                     {item.label}
                   </Link>
                 );

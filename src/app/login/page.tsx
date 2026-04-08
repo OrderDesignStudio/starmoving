@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Truck } from "lucide-react";
 
 export default function LoginPage() {
@@ -36,21 +35,22 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="rounded-full bg-blue-100 p-3">
-              <Truck className="h-8 w-8 text-blue-600" />
-            </div>
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="w-full max-w-sm px-6">
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-5">
+            <Truck className="h-8 w-8 text-[#171717]" />
           </div>
-          <CardTitle className="text-2xl">スター引越センター</CardTitle>
-          <p className="text-sm text-gray-500 mt-1">営業案件管理システム</p>
-        </CardHeader>
-        <CardContent>
+          <h1 className="text-[32px] font-semibold tracking-[-1.28px] text-[#171717]">
+            スター引越センター
+          </h1>
+          <p className="text-sm text-[#666666] mt-2">営業案件管理システム</p>
+        </div>
+
+        <div className="rounded-[8px] bg-white shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_2px,rgba(0,0,0,0.04)_0px_8px_8px_-8px,#fafafa_0px_0px_0px_1px] p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-red-50 text-red-600 text-sm p-3 rounded-md">
+              <div className="bg-[#fff5f5] text-[#ff5b4f] text-sm p-3 rounded-[6px] shadow-[rgba(255,91,79,0.15)_0px_0px_0px_1px]">
                 {error}
               </div>
             )}
@@ -77,8 +77,8 @@ export default function LoginPage() {
               {loading ? "ログイン中..." : "ログイン"}
             </Button>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

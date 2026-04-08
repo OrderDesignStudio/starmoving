@@ -9,13 +9,13 @@ interface StatusChartProps {
 }
 
 const COLORS: Record<string, string> = {
-  WON: "#22c55e",
-  WON_CANCELLED: "#ef4444",
-  APPOINTMENT: "#3b82f6",
-  CONSIDERING: "#eab308",
-  ESTIMATE_SUBMITTED: "#a855f7",
-  PRE_ESTIMATE: "#6b7280",
-  LOST_TO_COMPETITOR: "#f97316",
+  WON: "#171717",
+  WON_CANCELLED: "#ff5b4f",
+  APPOINTMENT: "#0a72ef",
+  CONSIDERING: "#808080",
+  ESTIMATE_SUBMITTED: "#666666",
+  PRE_ESTIMATE: "#ebebeb",
+  LOST_TO_COMPETITOR: "#de1d8d",
 };
 
 export function StatusChart({ data }: StatusChartProps) {
@@ -34,13 +34,20 @@ export function StatusChart({ data }: StatusChartProps) {
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-              <YAxis allowDecimals={false} />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke="#ebebeb" />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#666666" }} />
+              <YAxis allowDecimals={false} tick={{ fill: "#666666" }} />
+              <Tooltip
+                contentStyle={{
+                  borderRadius: "8px",
+                  border: "none",
+                  boxShadow: "rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px",
+                  fontSize: "13px",
+                }}
+              />
               <Bar dataKey="value" name="件数" radius={[4, 4, 0, 0]}>
                 {chartData.map((entry) => (
-                  <Cell key={entry.status} fill={COLORS[entry.status] || "#6b7280"} />
+                  <Cell key={entry.status} fill={COLORS[entry.status] || "#808080"} />
                 ))}
               </Bar>
             </BarChart>

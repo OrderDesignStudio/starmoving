@@ -11,51 +11,28 @@ interface StatsCardsProps {
 
 export function StatsCards({ totalCases, wonCases, winRate, thisMonthCases, totalRevenue }: StatsCardsProps) {
   const stats = [
-    {
-      label: "案件総数",
-      value: totalCases.toString(),
-      icon: FileText,
-      color: "text-blue-600 bg-blue-50",
-    },
-    {
-      label: "成約数",
-      value: wonCases.toString(),
-      icon: CheckCircle,
-      color: "text-green-600 bg-green-50",
-    },
-    {
-      label: "成約率",
-      value: `${winRate.toFixed(1)}%`,
-      icon: TrendingUp,
-      color: "text-purple-600 bg-purple-50",
-    },
-    {
-      label: "今月の案件",
-      value: thisMonthCases.toString(),
-      icon: Calendar,
-      color: "text-orange-600 bg-orange-50",
-    },
-    {
-      label: "売上合計",
-      value: `¥${totalRevenue.toLocaleString("ja-JP")}`,
-      icon: TrendingUp,
-      color: "text-emerald-600 bg-emerald-50",
-    },
+    { label: "案件総数", value: totalCases.toString(), icon: FileText },
+    { label: "成約数", value: wonCases.toString(), icon: CheckCircle },
+    { label: "成約率", value: `${winRate.toFixed(1)}%`, icon: TrendingUp },
+    { label: "今月の案件", value: thisMonthCases.toString(), icon: Calendar },
+    { label: "売上合計", value: `¥${totalRevenue.toLocaleString("ja-JP")}`, icon: TrendingUp },
   ];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       {stats.map((stat) => (
         <Card key={stat.label}>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className={`rounded-lg p-2 ${stat.color}`}>
-                <stat.icon className="h-5 w-5" />
-              </div>
+          <CardContent className="p-5">
+            <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500">{stat.label}</p>
-                <p className="text-xl font-bold">{stat.value}</p>
+                <p className="text-xs font-medium text-[#808080] uppercase tracking-wide font-mono">
+                  {stat.label}
+                </p>
+                <p className="text-[28px] font-semibold tracking-[-1.28px] text-[#171717] mt-1">
+                  {stat.value}
+                </p>
               </div>
+              <stat.icon className="h-4 w-4 text-[#808080]" />
             </div>
           </CardContent>
         </Card>

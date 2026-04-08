@@ -19,13 +19,13 @@ export const CASE_STATUS_LABELS: Record<string, string> = {
 };
 
 export const CASE_STATUS_COLORS: Record<string, string> = {
-  WON: "bg-green-100 text-green-800",
-  WON_CANCELLED: "bg-red-100 text-red-800",
-  APPOINTMENT: "bg-blue-100 text-blue-800",
-  CONSIDERING: "bg-yellow-100 text-yellow-800",
-  ESTIMATE_SUBMITTED: "bg-purple-100 text-purple-800",
-  PRE_ESTIMATE: "bg-gray-100 text-gray-800",
-  LOST_TO_COMPETITOR: "bg-orange-100 text-orange-800",
+  WON: "bg-[#f0fdf4] text-[#166534]",
+  WON_CANCELLED: "bg-[#fff5f5] text-[#ff5b4f]",
+  APPOINTMENT: "bg-[#ebf5ff] text-[#0068d6]",
+  CONSIDERING: "bg-[#fafafa] text-[#666666]",
+  ESTIMATE_SUBMITTED: "bg-[#f5f3ff] text-[#6d28d9]",
+  PRE_ESTIMATE: "bg-[#fafafa] text-[#808080]",
+  LOST_TO_COMPETITOR: "bg-[#fdf2f8] text-[#de1d8d]",
 };
 
 export const CASE_TYPE = {

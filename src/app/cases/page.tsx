@@ -24,7 +24,6 @@ export default async function CasesPage({
   const isAdmin = session.user.role === "ADMIN";
   const currentPage = Math.max(1, parseInt(params.page || "1", 10));
 
-  // Build where clause
   const where: Record<string, unknown> = {};
   if (!isAdmin) {
     where.userId = session.user.id;
@@ -59,7 +58,7 @@ export default async function CasesPage({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">案件一覧</h1>
+        <h1 className="text-[24px] font-semibold tracking-[-0.96px] text-[#171717]">案件一覧</h1>
         <Link href="/cases/new">
           <Button>
             <FilePlus className="h-4 w-4 mr-2" />
@@ -77,39 +76,39 @@ export default async function CasesPage({
         users={users}
       />
 
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden mt-4">
+      <div className="rounded-[8px] bg-white shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_2px] overflow-hidden mt-4">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                {isAdmin && <th className="px-4 py-3 text-left font-medium text-gray-600">担当者</th>}
-                <th className="px-4 py-3 text-left font-medium text-gray-600">顧客名</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">種別</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">状況</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">案件発生日</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">移転日</th>
-                <th className="px-4 py-3 text-right font-medium text-gray-600">見積金額</th>
-                <th className="px-4 py-3 text-center font-medium text-gray-600">操作</th>
+            <thead>
+              <tr className="shadow-[inset_0_-1px_0_rgba(0,0,0,0.08)]">
+                {isAdmin && <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">担当者</th>}
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">顧客名</th>
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">種別</th>
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">状況</th>
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">案件発生日</th>
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">移転日</th>
+                <th className="px-6 py-3 text-right text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">見積金額</th>
+                <th className="px-6 py-3 text-center text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">操作</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody>
               {cases.length === 0 ? (
                 <tr>
-                  <td colSpan={isAdmin ? 8 : 7} className="px-4 py-8 text-center text-gray-500">
+                  <td colSpan={isAdmin ? 8 : 7} className="px-6 py-12 text-center text-[#808080]">
                     案件がありません
                   </td>
                 </tr>
               ) : (
                 cases.map((c) => (
-                  <tr key={c.id} className="hover:bg-gray-50">
-                    {isAdmin && <td className="px-4 py-3 text-gray-700">{c.user.name}</td>}
-                    <td className="px-4 py-3 font-medium text-gray-900">{c.customerName}</td>
-                    <td className="px-4 py-3 text-gray-600">{CASE_TYPE_LABELS[c.caseType] || c.caseType}</td>
-                    <td className="px-4 py-3"><StatusBadge status={c.status} /></td>
-                    <td className="px-4 py-3 text-gray-600">{formatDate(c.caseDate)}</td>
-                    <td className="px-4 py-3 text-gray-600">{formatDate(c.movingDate)}</td>
-                    <td className="px-4 py-3 text-right text-gray-700">{formatCurrency(c.expenses?.estimateAmount)}</td>
-                    <td className="px-4 py-3 text-center">
+                  <tr key={c.id} className="shadow-[inset_0_-1px_0_rgba(0,0,0,0.04)] hover:bg-[#fafafa] transition-colors">
+                    {isAdmin && <td className="px-6 py-3 text-[#4d4d4d]">{c.user.name}</td>}
+                    <td className="px-6 py-3 font-medium text-[#171717]">{c.customerName}</td>
+                    <td className="px-6 py-3 text-[#666666]">{CASE_TYPE_LABELS[c.caseType] || c.caseType}</td>
+                    <td className="px-6 py-3"><StatusBadge status={c.status} /></td>
+                    <td className="px-6 py-3 text-[#666666] font-mono text-xs">{formatDate(c.caseDate)}</td>
+                    <td className="px-6 py-3 text-[#666666] font-mono text-xs">{formatDate(c.movingDate)}</td>
+                    <td className="px-6 py-3 text-right text-[#4d4d4d] font-mono text-xs">{formatCurrency(c.expenses?.estimateAmount)}</td>
+                    <td className="px-6 py-3 text-center">
                       <Link href={`/cases/${c.id}`}>
                         <Button variant="ghost" size="sm">
                           <Eye className="h-4 w-4" />
@@ -122,8 +121,8 @@ export default async function CasesPage({
             </tbody>
           </table>
         </div>
-        <div className="bg-gray-50 border-t border-gray-200 px-4 py-3 flex items-center justify-between">
-          <span className="text-sm text-gray-500">
+        <div className="shadow-[inset_0_1px_0_rgba(0,0,0,0.08)] px-6 py-3 flex items-center justify-between">
+          <span className="text-xs text-[#808080] font-mono">
             全 {totalCount} 件中 {(currentPage - 1) * PAGE_SIZE + 1}-{Math.min(currentPage * PAGE_SIZE, totalCount)} 件表示
           </span>
           {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} />}

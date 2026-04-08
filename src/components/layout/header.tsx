@@ -8,16 +8,16 @@ export function Header() {
   const { data: session } = useSession();
 
   return (
-    <header className="sticky top-0 z-20 bg-white border-b border-gray-200 px-6 py-3">
+    <header className="sticky top-0 z-20 bg-white shadow-[inset_0_-1px_0_rgba(0,0,0,0.08)] px-6 py-3">
       <div className="flex items-center justify-between">
-        <div className="lg:hidden w-10" /> {/* Spacer for mobile menu button */}
+        <div className="lg:hidden w-10" />
         <div className="flex-1" />
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-sm text-[#666666]">
             <User className="h-4 w-4" />
-            <span>{session?.user?.name}</span>
+            <span className="font-medium text-[#171717]">{session?.user?.name}</span>
             {session?.user?.role === "ADMIN" && (
-              <span className="bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded-full">
+              <span className="bg-[#ebf5ff] text-[#0068d6] text-[11px] font-medium px-2 py-0.5 rounded-[9999px]">
                 管理者
               </span>
             )}
@@ -26,7 +26,6 @@ export function Header() {
             variant="ghost"
             size="sm"
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="text-gray-500"
           >
             <LogOut className="h-4 w-4 mr-1" />
             ログアウト

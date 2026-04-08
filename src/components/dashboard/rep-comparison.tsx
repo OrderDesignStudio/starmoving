@@ -17,23 +17,29 @@ export function RepComparison({ data }: RepComparisonProps) {
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-              <YAxis allowDecimals={false} />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke="#ebebeb" />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#666666" }} />
+              <YAxis allowDecimals={false} tick={{ fill: "#666666" }} />
+              <Tooltip
+                contentStyle={{
+                  borderRadius: "8px",
+                  border: "none",
+                  boxShadow: "rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px",
+                  fontSize: "13px",
+                }}
+              />
               <Legend />
-              <Bar dataKey="total" name="案件数" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="won" name="成約数" fill="#22c55e" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="total" name="案件数" fill="#171717" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="won" name="成約数" fill="#0a72ef" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
-        {/* Rate table */}
-        <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+        <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {data.map((rep) => (
-            <div key={rep.name} className="text-center p-2 bg-gray-50 rounded">
-              <p className="text-xs text-gray-500">{rep.name}</p>
-              <p className="text-lg font-bold text-blue-600">{rep.rate.toFixed(1)}%</p>
-              <p className="text-xs text-gray-400">成約率</p>
+            <div key={rep.name} className="text-center p-3 rounded-[8px] shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px]">
+              <p className="text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">{rep.name}</p>
+              <p className="text-[24px] font-semibold tracking-[-0.96px] text-[#171717]">{rep.rate.toFixed(1)}%</p>
+              <p className="text-[11px] text-[#808080]">成約率</p>
             </div>
           ))}
         </div>

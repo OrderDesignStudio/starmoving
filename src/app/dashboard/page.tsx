@@ -7,13 +7,13 @@ import { CASE_STATUS } from "@/lib/constants";
 import dynamic from "next/dynamic";
 
 const StatusChart = dynamic(() => import("@/components/dashboard/status-chart").then((m) => ({ default: m.StatusChart })), {
-  loading: () => <div className="h-[380px] bg-white rounded-lg border border-gray-200 animate-pulse" />,
+  loading: () => <div className="h-[380px] bg-white rounded-[8px] shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px] animate-pulse" />,
 });
 const MonthlyChart = dynamic(() => import("@/components/dashboard/monthly-chart").then((m) => ({ default: m.MonthlyChart })), {
-  loading: () => <div className="h-[380px] bg-white rounded-lg border border-gray-200 animate-pulse" />,
+  loading: () => <div className="h-[380px] bg-white rounded-[8px] shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px] animate-pulse" />,
 });
 const RepComparison = dynamic(() => import("@/components/dashboard/rep-comparison").then((m) => ({ default: m.RepComparison })), {
-  loading: () => <div className="h-[380px] bg-white rounded-lg border border-gray-200 animate-pulse" />,
+  loading: () => <div className="h-[380px] bg-white rounded-[8px] shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px] animate-pulse" />,
 });
 
 export default async function DashboardPage() {
@@ -26,7 +26,6 @@ export default async function DashboardPage() {
   const now = new Date();
   const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  // Run all DB queries in parallel
   const [
     totalCases,
     wonCases,
@@ -70,7 +69,6 @@ export default async function DashboardPage() {
     count: g._count,
   }));
 
-  // Monthly data (last 6 months) - single query with grouping
   const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
   const monthlyCases = await prisma.case.findMany({
     where: { ...userFilter, caseDate: { gte: sixMonthsAgo } },
@@ -92,7 +90,6 @@ export default async function DashboardPage() {
     });
   }
 
-  // Rep comparison (admin only) - efficient query
   let repData: { name: string; total: number; won: number; rate: number }[] = [];
   if (isAdmin) {
     const repGroups = await prisma.case.groupBy({
@@ -129,7 +126,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">ダッシュボード</h1>
+      <h1 className="text-[24px] font-semibold tracking-[-0.96px] text-[#171717]">ダッシュボード</h1>
 
       <StatsCards
         totalCases={totalCases}

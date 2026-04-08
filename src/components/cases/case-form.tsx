@@ -101,22 +101,22 @@ export function CaseForm({ initialData, users, currentUserId, isAdmin }: CaseFor
   return (
     <form onSubmit={handleSubmit}>
       {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-md mb-4">
+        <div className="bg-[#fff5f5] text-[#ff5b4f] text-sm p-3 rounded-[6px] shadow-[rgba(255,91,79,0.15)_0px_0px_0px_1px] mb-4">
           {error}
         </div>
       )}
 
       {/* Tab navigation */}
-      <div className="flex border-b border-gray-200 mb-6">
+      <div className="flex gap-1 mb-6">
         {tabs.map((tab, i) => (
           <button
             key={tab}
             type="button"
             onClick={() => setActiveTab(i)}
-            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+            className={`px-4 py-2 text-sm font-medium rounded-[6px] transition-colors ${
               activeTab === i
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-gray-500 hover:text-gray-700"
+                ? "bg-[#171717] text-white"
+                : "text-[#666666] hover:bg-[#fafafa] hover:text-[#171717]"
             }`}
           >
             {tab}

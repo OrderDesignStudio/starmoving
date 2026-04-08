@@ -11,37 +11,37 @@ export default async function UsersPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">ユーザー管理</h1>
+        <h1 className="text-[24px] font-semibold tracking-[-0.96px] text-[#171717]">ユーザー管理</h1>
       </div>
 
       <AddUserForm />
 
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden mt-6">
+      <div className="rounded-[8px] bg-white shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_2px] overflow-hidden mt-6">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">名前</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">メールアドレス</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">ロール</th>
-                <th className="px-4 py-3 text-center font-medium text-gray-600">案件数</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">登録日</th>
-                <th className="px-4 py-3 text-center font-medium text-gray-600">操作</th>
+            <thead>
+              <tr className="shadow-[inset_0_-1px_0_rgba(0,0,0,0.08)]">
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">名前</th>
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">メールアドレス</th>
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">ロール</th>
+                <th className="px-6 py-3 text-center text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">案件数</th>
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">登録日</th>
+                <th className="px-6 py-3 text-center text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">操作</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody>
               {users.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium text-gray-900">{user.name}</td>
-                  <td className="px-4 py-3 text-gray-600">{user.email}</td>
-                  <td className="px-4 py-3">
+                <tr key={user.id} className="shadow-[inset_0_-1px_0_rgba(0,0,0,0.04)] hover:bg-[#fafafa] transition-colors">
+                  <td className="px-6 py-3 font-medium text-[#171717]">{user.name}</td>
+                  <td className="px-6 py-3 text-[#666666] font-mono text-xs">{user.email}</td>
+                  <td className="px-6 py-3">
                     <RoleSelect userId={user.id} currentRole={user.role} />
                   </td>
-                  <td className="px-4 py-3 text-center">
-                    <Badge className="bg-gray-100 text-gray-700">{user._count.cases}件</Badge>
+                  <td className="px-6 py-3 text-center">
+                    <Badge className="bg-[#fafafa] text-[#4d4d4d] shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px]">{user._count.cases}件</Badge>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{formatDate(user.createdAt)}</td>
-                  <td className="px-4 py-3 text-center">
+                  <td className="px-6 py-3 text-[#666666] font-mono text-xs">{formatDate(user.createdAt)}</td>
+                  <td className="px-6 py-3 text-center">
                     <DeleteUserButton userId={user.id} userName={user.name} caseCount={user._count.cases} />
                   </td>
                 </tr>
@@ -49,7 +49,7 @@ export default async function UsersPage() {
             </tbody>
           </table>
         </div>
-        <div className="bg-gray-50 border-t border-gray-200 px-4 py-3 text-sm text-gray-500">
+        <div className="shadow-[inset_0_1px_0_rgba(0,0,0,0.08)] px-6 py-3 text-xs text-[#808080] font-mono">
           全 {users.length} 名
         </div>
       </div>

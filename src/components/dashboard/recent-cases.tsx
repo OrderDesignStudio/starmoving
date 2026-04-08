@@ -22,27 +22,27 @@ export function RecentCases({ cases }: { cases: RecentCase[] }) {
       <CardContent className="p-0">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-4 py-2.5 text-left font-medium text-gray-600">顧客名</th>
-                <th className="px-4 py-2.5 text-left font-medium text-gray-600">担当者</th>
-                <th className="px-4 py-2.5 text-left font-medium text-gray-600">種別</th>
-                <th className="px-4 py-2.5 text-left font-medium text-gray-600">状況</th>
-                <th className="px-4 py-2.5 text-left font-medium text-gray-600">案件発生日</th>
+            <thead>
+              <tr className="shadow-[inset_0_-1px_0_rgba(0,0,0,0.08)]">
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">顧客名</th>
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">担当者</th>
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">種別</th>
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">状況</th>
+                <th className="px-6 py-3 text-left text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">案件発生日</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody>
               {cases.map((c) => (
-                <tr key={c.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2.5">
-                    <Link href={`/cases/${c.id}`} className="text-blue-600 hover:underline font-medium">
+                <tr key={c.id} className="shadow-[inset_0_-1px_0_rgba(0,0,0,0.04)] hover:bg-[#fafafa] transition-colors">
+                  <td className="px-6 py-3">
+                    <Link href={`/cases/${c.id}`} className="text-[#171717] hover:text-[#0072f5] font-medium transition-colors">
                       {c.customerName}
                     </Link>
                   </td>
-                  <td className="px-4 py-2.5 text-gray-600">{c.user.name}</td>
-                  <td className="px-4 py-2.5 text-gray-600">{CASE_TYPE_LABELS[c.caseType] || c.caseType}</td>
-                  <td className="px-4 py-2.5"><StatusBadge status={c.status} /></td>
-                  <td className="px-4 py-2.5 text-gray-600">{formatDate(c.caseDate)}</td>
+                  <td className="px-6 py-3 text-[#666666]">{c.user.name}</td>
+                  <td className="px-6 py-3 text-[#666666]">{CASE_TYPE_LABELS[c.caseType] || c.caseType}</td>
+                  <td className="px-6 py-3"><StatusBadge status={c.status} /></td>
+                  <td className="px-6 py-3 text-[#666666] font-mono text-xs">{formatDate(c.caseDate)}</td>
                 </tr>
               ))}
             </tbody>

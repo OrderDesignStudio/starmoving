@@ -44,7 +44,7 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ id:
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold">{caseData.customerName}</h1>
+          <h1 className="text-[24px] font-semibold tracking-[-0.96px] text-[#171717]">{caseData.customerName}</h1>
           <StatusBadge status={caseData.status} />
         </div>
         <div className="flex gap-2">
@@ -61,29 +61,23 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ id:
       </div>
 
       <div className="grid gap-6">
-        {/* 経過日数 */}
         {(daysToVisit !== null || daysToEstimate !== null) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {daysToVisit !== null && (
-              <Card className="bg-blue-50 border-blue-200">
-                <CardContent className="p-4 text-center">
-                  <p className="text-sm text-blue-600">案件発生から訪問まで</p>
-                  <p className="text-3xl font-bold text-blue-700">{daysToVisit}日</p>
-                </CardContent>
-              </Card>
+              <div className="rounded-[8px] shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px] p-5 text-center">
+                <p className="text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">案件発生から訪問まで</p>
+                <p className="text-[40px] font-semibold tracking-[-2.4px] text-[#0a72ef] mt-1">{daysToVisit}<span className="text-lg ml-0.5">日</span></p>
+              </div>
             )}
             {daysToEstimate !== null && (
-              <Card className="bg-purple-50 border-purple-200">
-                <CardContent className="p-4 text-center">
-                  <p className="text-sm text-purple-600">訪問から見積提出まで</p>
-                  <p className="text-3xl font-bold text-purple-700">{daysToEstimate}日</p>
-                </CardContent>
-              </Card>
+              <div className="rounded-[8px] shadow-[rgba(0,0,0,0.08)_0px_0px_0px_1px] p-5 text-center">
+                <p className="text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono">訪問から見積提出まで</p>
+                <p className="text-[40px] font-semibold tracking-[-2.4px] text-[#de1d8d] mt-1">{daysToEstimate}<span className="text-lg ml-0.5">日</span></p>
+              </div>
             )}
           </div>
         )}
 
-        {/* 案件概要 */}
         <Card>
           <CardHeader>
             <CardTitle>案件概要</CardTitle>
@@ -112,7 +106,6 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ id:
           </CardContent>
         </Card>
 
-        {/* ヒアリング */}
         <Card>
           <CardHeader>
             <CardTitle>案件ヒアリング</CardTitle>
@@ -129,7 +122,6 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ id:
           </CardContent>
         </Card>
 
-        {/* クロージング */}
         <Card>
           <CardHeader>
             <CardTitle>クロージング</CardTitle>
@@ -147,7 +139,6 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ id:
           </CardContent>
         </Card>
 
-        {/* 見積時経費 */}
         {caseData.expenses && (
           <Card>
             <CardHeader>
@@ -183,8 +174,8 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ id:
 function DetailItem({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs text-gray-500 mb-0.5">{label}</dt>
-      <dd className="text-sm font-medium text-gray-900">{value}</dd>
+      <dt className="text-[11px] font-medium text-[#808080] uppercase tracking-wide font-mono mb-1">{label}</dt>
+      <dd className="text-sm font-medium text-[#171717]">{value}</dd>
     </div>
   );
 }

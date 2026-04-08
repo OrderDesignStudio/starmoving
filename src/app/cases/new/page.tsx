@@ -14,7 +14,7 @@ export default async function NewCasePage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">新規案件登録</h1>
+      <h1 className="text-[24px] font-semibold tracking-[-0.96px] text-[#171717] mb-6">新規案件登録</h1>
       <CaseForm currentUserId={session.user.id} isAdmin={isAdmin} users={users} />
     </div>
   );
